@@ -1,20 +1,11 @@
 #!/usr/bin/python3
 
-# OPTIONS:
-# File can be provided at any place
-# --term-def(inition)/--td, --def(inition)-term/--dt, --random-order/--ro
-# --single - ask single question
-# --all    - ask all of the avaliable entries
-# --count <number-of-questions>
-# --shuffle, --no-shuffle
-# --blur <radius-of-blur>
-
 import sys
 from random import randint
 
 class State:
     fnames = []
-    order = 'td' # td (term-def), dt (def-term), ro (random-order)
+    order = 'td' # td (term-def), dt (def-term), ar (asks-random)
     count = None # All
     blur  = None # Complete randomness
 
@@ -40,8 +31,8 @@ if __name__ == '__main__':
             State.order = 'td'
         elif arg in ['--def-term', '--definition-term', '--dt']:
             State.order = 'dt'
-        elif arg in ['--random-order', '--ro']:
-            State.order = 'ro'
+        elif arg in ['--asks-random', '--ar']:
+            State.order = 'ar'
         elif arg in ['--single']:
             State.count = 1
         elif arg in ['--all']:
@@ -98,17 +89,16 @@ if __name__ == '__main__':
 
     # QUIZ
     #
-    inv = '--inverse' in sys.argv[1]
+    print('Press Enter to reveal...')
+    inv = State.order == 'dt'
     for i, card in enumerate(cards):
         if i > State.count-1:
             break
-        if len(card) < 2:
-            print('Error. No term')
-            break
-        print(card[inv])
-        print('-')
-        ans = input('Press Enter...').lower()
-        print('-')
-        print(card[1-inv])
-        print()
+        if State.order == 'ar':
+            inv = randint(0, 1)
+        print(card[inv], end='')
+        input()
+        print(card[1-inv], end='')
         # get it?
+        input()
+        print()
