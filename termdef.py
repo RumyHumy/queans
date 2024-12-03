@@ -80,7 +80,7 @@ if __name__ == '__main__':
     #
     inv = '--inverse' in sys.argv[1]
     for i, card in enumerate(cards):
-        if i == State.count-1:
+        if State.count != None and i == State.count-1:
             break
         if len(card) < 2:
             print('Error. No term')
