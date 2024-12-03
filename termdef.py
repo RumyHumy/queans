@@ -6,14 +6,17 @@
 # --single - ask single question
 # --all    - ask all of the avaliable entries
 # --count <number-of-questions>
+# --shuffle, --no-shuffle
+# --blur <radius-of-blur>
 
 import sys
 from random import randint
 
 class State:
     fnames = []
-    order = 'td' # td, dt, ro
-    count = None
+    order = 'td' # td (term-def), dt (def-term), ro (random-order)
+    count = None # All
+    blur  = None # Complete randomness
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -43,12 +46,22 @@ if __name__ == '__main__':
             State.count = 1
         elif arg in ['--all']:
             State.count = None
+        elif arg in ['--shuffle']:
+            State.blur = None
+        elif arg in ['--no-shuffle']:
+            State.blur = 0
         elif arg in ['--count']:
             i += 1
             narg = subarg(i, arg)
             if not narg.isnumeric():
                 wrong_subarg(arg)
             State.count = int(narg)
+        elif arg in ['--blur']:
+            i += 1
+            narg = subarg(i, arg)
+            if not narg.isnumeric():
+                wrong_subarg(arg)
+            State.blur = int(narg)
         elif arg[:2] == '--':
             print('Unknown "--"-argument')
             exit(1)
@@ -69,18 +82,25 @@ if __name__ == '__main__':
             if '??' in c:
                 cards.append(c.split('??'))
         file.close()
+    if State.count == None:
+        State.count = len(cards)
 
     # SHUFFLE
     #
     for i in range(len(cards)):
-        p1, p2 = i, randint(0, len(cards)-1)
+        p1 = i
+        if State.blur == None:
+            p2 = randint(0, len(cards)-1)
+        else:
+            p2 = i+randint(-State.blur, +State.blur)
+            p2 = max(0, min(p2, len(cards)-1))
         cards[p1], cards[p2] = cards[p2], cards[p1]
 
     # QUIZ
     #
     inv = '--inverse' in sys.argv[1]
     for i, card in enumerate(cards):
-        if State.count != None and i == State.count-1:
+        if i > State.count-1:
             break
         if len(card) < 2:
             print('Error. No term')
