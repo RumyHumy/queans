@@ -1,5 +1,5 @@
 # termdef
-Python script for simple "term-defenition" text quizes
+Linux Python script for simple "term-defenition" text quizes
 
 # FILE LAYOUT
 ```
@@ -16,6 +16,7 @@ answer
 
 
 # OPTIONS:
+```bash
 ./termdef.py <file1> <file2> ... <filen> [OPTIONS]
 --term-def(inition)/--td - asks you term
 --def(inition)-term/--dt - asks you defenition
@@ -25,3 +26,4 @@ answer
 --count <number-of-questions>
 --shuffle, --no-shuffle
 --blur <radius-of-blur>
+```
