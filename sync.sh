@@ -4,5 +4,5 @@ set -x
 
 git pull
 git add *
-git commit -am "$(date): $1"
+git commit -am "$1"
 git push

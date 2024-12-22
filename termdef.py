@@ -66,13 +66,63 @@ if __name__ == '__main__':
 
     # READ RAW FILES
     #
+    class Card:
+        content = None
+        fname = None
+        line = None
     cards = []
+    entry_flag = False
     for fname in State.fnames:
         file = open(fname, 'r', encoding='utf-8')
-        for c in file.read().split('\n'):
-            if '??' in c:
-                cards.append(c.split('??'))
+        lines = file.readlines()
         file.close()
+        card = None
+        previ = None
+        for i, l in enumerate(lines):
+            if entry_flag == False:
+                if not l.find('??') in [-1, 0]:
+                    card = Card()
+                    card.content = l.split('??', 1)
+                    card.fname = fname
+                    card.line = i
+                    cards.append(card)
+            if l == '>>>\n':
+                if entry_flag == True:
+                    print(f'Unexpected ">>>" in "{fname}:{i}"')
+                    print('Ignoring file.')
+                    break
+                entry_flag = True
+                card = Card()
+                card.content = []
+                card.line = i
+                card.fname = fname
+                previ = i
+            elif l == '??\n':
+                if entry_flag == False:
+                    print(f'Unexpected "??" in "{fname}:{i}"')
+                    print('Ignoring file.')
+                    break
+                card.content.append(''.join(lines[previ+1:i]))
+                previ = i
+            elif l == '<<<\n':
+                if entry_flag == False:
+                    print(f'Unexpected "<<<" in "{fname}:{i}"')
+                    print('Ignoring file.')
+                    break
+                if len(card.content) == 0:
+                    print(f'Unexpected end of entry in "{fname}:{i}"')
+                    print(f'("??" expected)')
+                    print('Ignoring file.')
+                    break
+                entry_flag = False
+                card.content.append(''.join(lines[previ+1:i]))
+                cards.append(card)
+                print(card)
+        if entry_flag == True:
+            print(f'Unexpected EOF in "{fname}"')
+            print('Ignoring file.')
+            break
+
     if State.count == None:
         State.count = len(cards)
 
@@ -89,16 +139,16 @@ if __name__ == '__main__':
 
     # QUIZ
     #
-    print('Press Enter to reveal...')
+    print('Les go...')
     inv = State.order == 'dt'
     for i, card in enumerate(cards):
         if i > State.count-1:
             break
         if State.order == 'ar':
             inv = randint(0, 1)
-        print(card[inv], end='')
+        print(card.content[inv], end='')
         input()
-        print(card[1-inv], end='')
-        # get it?
-        input()
+        print(card.content[1-inv], end='')
+        score = input('Good/Weak/Bad (g/w/B): ').lower()
+        score = 2 if score == 'g' else 1 if score == 'w' else 0
         print()

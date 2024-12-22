@@ -1,6 +1,20 @@
 # termdef
 Python script for simple "term-defenition" text quizes
 
+# FILE LAYOUT
+```
+question??answer
+
+>>>
+multiline
+question
+??
+multiline
+answer
+<<<
+```
+
+
 # OPTIONS:
 ./termdef.py <file1> <file2> ... <filen> [OPTIONS]
 --term-def(inition)/--td - asks you term
