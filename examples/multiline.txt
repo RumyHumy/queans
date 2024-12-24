@@ -9,6 +9,7 @@ Cats are:
 - Cute
 - Cuddly
 <<<
+<score=3>
 
 Kakbi da
 
@@ -17,3 +18,4 @@ ahahah
 ??
 why
 <<<
+<score=2>
