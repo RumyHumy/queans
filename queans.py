@@ -111,11 +111,11 @@ if __name__ == '__main__':
     # QUIZ
     #
     print('Les go...\n')
-    inv = State.order == 'dt'
+    inv = State.order == 'aq'
     for i, card in enumerate(cards):
         if i > State.count-1:
             break
-        if State.order == 'ar':
+        if State.order == 'ro':
             inv = randint(0, 1)
         print(card.content[inv])
         input('...')

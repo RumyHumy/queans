@@ -1,6 +1,22 @@
 # termdef
 CLI linux Python script for simple "question-answer" text quizes
 
+# EXAMPLES
+## In order quiz
+./queans.py -no-shuffle test.txt
+
+## Single question
+./queans.py -single test.txt
+
+## Answer-question quiz
+./queans.py -aq test.txt
+
+## Both ways quiz
+./queans.py -ro test.txt
+
+## A little bit of shuffle
+./queans.py -blur 2 test.txt
+
 # FILE LAYOUT
 ```
 QUESTION 1:
