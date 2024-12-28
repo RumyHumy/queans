@@ -3,12 +3,19 @@
 import sys
 from random import randint
 
+class FileInfo:
+    name = None
+    obj = None
+    data = ''
+    entries = []
+    def __init__(self, name):
+        self.name = name
+
 class State:
-    fnames = []
-    order = 'td' # td (term-def), dt (def-term), ar (asks-random)
+    files = [] # FileInfo
+    order = 'qa' # qa (question-answer), aq (answer-question), ro (random-order)
     count = None # All
-    blur  = None # Complete randomness
-    use_score = True
+    blur  = None # Shuffle
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -28,12 +35,12 @@ if __name__ == '__main__':
     i = 1
     while i < len(sys.argv):
         arg = sys.argv[i]
-        if   arg in ['-term-def', '-term-definition', '-td']:
-            State.order = 'td'
-        elif arg in ['-def-term', '-definition-term', '-dt']:
-            State.order = 'dt'
-        elif arg in ['-asks-random', '-ar']:
-            State.order = 'ar'
+        if   arg in ['-question-answer', '-que-ans', '-qa']:
+            State.order = 'qa'
+        elif arg in ['-answer-question', '-ans-que', '-aq']:
+            State.order = 'aq'
+        elif arg in ['-random-order', '-ro']:
+            State.order = 'ro'
         elif arg in ['-single']:
             State.count = 1
         elif arg in ['-all']:
@@ -54,30 +61,38 @@ if __name__ == '__main__':
             if not narg.isnumeric():
                 wrong_subarg(arg)
             State.blur = int(narg)
-        elif arg in ['-score']:
-            State.use_score = None
-        elif arg in ['-no-score']:
-            State.use_score = 0
         elif arg[0] == '-':
             print('Unknown "-"-argument')
             exit(1)
         else:
-            State.fnames.append(arg)
+            State.files.append(FileInfo(arg))
         i += 1
     del i
 
-    if len(State.fnames) == 0:
+    if len(State.files) == 0:
         print('Files not provided')
 
     # READ RAW FILES
     #
     class Card:
-        content = None
-        fname = None
-        bline = None
-        eline = None
-        score = None
-    exit()
+        content = [] # [question, answer]
+    cards = []
+    for file in State.files:
+        fobj = open(file.name, 'r', encoding='utf-8')
+        file.data = fobj.read()
+        # Creating backup
+        fbak = open(f'{file.name}.bak', 'w', encoding='utf-8')
+        fbak.write(file.data)
+        fbak.close()
+        # Get contents
+        file.obj = fobj
+        file.entries = file.data.strip().split('\n\n')
+        for e in file.entries:
+            if e.find('??') > 0:
+                card = Card()
+                card.content = [c.strip() for c in e.split('??', 1)]
+                cards.append(card)
+                continue
 
     # SHUFFLE
     #
@@ -90,27 +105,21 @@ if __name__ == '__main__':
             p2 = max(0, min(p2, len(cards)-1))
         cards[p1], cards[p2] = cards[p2], cards[p1]
 
-    # SORT BY SCORE
-    #
-    #cards.sort(key=lambda x: x.score, reverse=True)
+    if State.count == None:
+        State.count = len(cards)
 
     # QUIZ
     #
-    print('Les go...')
+    print('Les go...\n')
     inv = State.order == 'dt'
     for i, card in enumerate(cards):
-        print(card.content, card.score)
         if i > State.count-1:
             break
         if State.order == 'ar':
             inv = randint(0, 1)
-        print(card.content[inv], end='')
+        print(card.content[inv])
         input('...')
-        print(card.content[1-inv], end='')
-        if State.use_score == True:
-            if card.score == None:
-                card.score = 0
-            score = input('Good/Weak/Bad (g/w/B): ').lower()
-            score = 1 if score == 'g' else 0 if score == 'w' else -1
-            card.score = min(0, card.score+score)
+        print(card.content[1-inv])
+        print()
+        input()
         print()

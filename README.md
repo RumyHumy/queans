@@ -1,31 +1,41 @@
 # termdef
-Linux Python script for simple "term-defenition" text quizes
+CLI linux Python script for simple "question-answer" text quizes
 
 # FILE LAYOUT
 ```
 QUESTION 1:
-question??answer
+
+que??ans
+
 
 QUESTION 2:
->>>
-multiline
-question
-??
-multiline
-answer
-<<<
-```
 
+2+2??4
+
+
+QUESTION 3:
+
+do you like your life?
+??
+yeah
+```
 
 # OPTIONS
 ```text
+
 ./termdef.py [OPTIONS] <file1> <file2> ... <filen>
--term-def(inition) / -td - asks you term
--def(inition)-term / -dt - asks you defenition
--asks-random / -ar - asks at random term-def/def-term
+
+CARDS ORDER:
+-shuffle, -no-shuffle
+-blur <radius> - shuffles nearest in <radius>
+
+QUESTIONING ORDER:
+-question-answer / -qa - normal questioning order
+-answer-question / -aq - inverse questioning order
+-random-order / -ro    - random questioning order
+
+AMOUNT:
 -single - ask single question
 -all    - ask all of the avaliable entries
 -count <number-of-questions>
--shuffle, -no-shuffle
--blur <radius> - shuffles nearest in <radius>
 ```
