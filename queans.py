@@ -81,9 +81,9 @@ if __name__ == '__main__':
         fobj = open(file.name, 'r', encoding='utf-8')
         file.data = fobj.read()
         # Creating backup
-        fbak = open(f'{file.name}.bak', 'w', encoding='utf-8')
-        fbak.write(file.data)
-        fbak.close()
+        #fbak = open(f'{file.name}.bak', 'w', encoding='utf-8')
+        #fbak.write(file.data)
+        #fbak.close()
         # Get contents
         file.obj = fobj
         file.entries = file.data.strip().split('\n\n')
