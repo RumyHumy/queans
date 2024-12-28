@@ -4,27 +4,27 @@ CLI linux Python script for simple "question-answer" text quizes
 # EXAMPLES
 In order quiz
 ```console
--> ./queans.py -no-shuffle test.txt
+./queans.py -no-shuffle test.txt
 ```
 
 Single question
 ```console
--> ./queans.py -single test.txt
+./queans.py -single test.txt
 ```
 
 Answer-question quiz
 ```console
--> ./queans.py -aq test.txt
+./queans.py -aq test.txt
 ```
 
 Both ways quiz
 ```console
--> ./queans.py -ro test.txt
+./queans.py -ro test.txt
 ```
 
 A little bit of shuffle
 ```console
--> ./queans.py -blur 2 test.txt
+./queans.py -blur 2 test.txt
 ```
 
 # FILE LAYOUT
